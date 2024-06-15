@@ -1,0 +1,42 @@
+#quit {
+	background-color: #ff0000;
+	border: 0 solid transparent;
+	border-radius: 0;
+	font-family: fantasy;
+	transition: 0.25s ease background;
+	margin: 0;
+}
+
+#savefile {
+	background-color: #19c416;
+	border: 0 solid transparent;
+	border-radius: 0;
+	font-family: fantasy;
+	transition: 0.25s ease background;
+	margin: 0;
+}
+
+#openfile {
+	background-color: #19c416;
+	border: 0 solid transparent;
+	border-radius: 0;
+	font-family: fantasy;
+	transition: 0.25s ease background;
+	margin: 0;
+}
+
+#quit:hover {
+	background-color: #ff4040;
+	border: 0.1rem solid #ffffff;
+	border-radius: 0.15rem;
+}
+
+#openfile:hover, #savefile:hover {
+	background-color: #23cc21;
+	border: 0.1rem solid #ffffff;
+	border-radius: 0.15rem;
+}
+
+#textbox {
+	border-top: 0.25rem solid #ffffff;
+}
