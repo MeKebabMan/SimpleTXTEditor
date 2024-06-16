@@ -5,6 +5,8 @@
 #include "gtk/gtk.h"
 #include <stdio.h>
 
+// CREATE GTK APP
+
 int CreateGTKAPP(const char *__appID, int *__FUNC, int argc, char **argv) {
 
   GtkApplication *app;
@@ -19,6 +21,10 @@ int CreateGTKAPP(const char *__appID, int *__FUNC, int argc, char **argv) {
 
   return status;
 }
+
+
+
+// GET CSS PATH 1
 
 const char *GET_CSS_PATH_1(const char *__TOML_CONFIG) {
 
@@ -55,6 +61,8 @@ const char *GET_CSS_PATH_1(const char *__TOML_CONFIG) {
   return (const char *)CSS_PATH.u.s;
 }
 
+// GET CSS PATH 2
+
 const char *GET_CSS_PATH_2(const char *__TOML_CONFIG) {
 
   FILE *TOML_PTR = fopen(__TOML_CONFIG, "r");
@@ -88,4 +96,25 @@ const char *GET_CSS_PATH_2(const char *__TOML_CONFIG) {
   fclose(TOML_PTR);
 
   return (const char *)CSS_INSTALL_PATH.u.s;
+}
+
+// GTK SAVE FILE
+
+void GTK_Savefile(GtkWidget *widget, gpointer user_data) {
+
+}
+
+// GTK OPEN FILE
+
+void GTK_Openfile(GtkWidget *widget, gpointer user_data) {
+
+}
+
+// GTK DESTROY WIDGET
+
+void GTK_DESTROY_WIDGET(GtkWidget *widget, gpointer data) {
+  GtkWidget *WINDOW = GTK_WIDGET(data);
+  if (GTK_IS_WINDOW(GTK_WINDOW(data))) {
+    gtk_window_destroy(GTK_WINDOW(WINDOW));
+  }
 }

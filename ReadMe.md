@@ -20,11 +20,80 @@ git clone https://github.com/MeKebabMan/SimpleTXTEditor && cd SimpleTXTEditor &&
 
 Window users will have to compile by them selfs
 
+# INSTALL WITHOUT INSTALL SCRIPT
+
+- 1: First compile everything in the **src** directory (Any compiler)
+- 2: Make sure to have GTK4 installed on your system
+
+
+### GO TO https://www.gtk.org/ FOR MORE INFORMATION!
+
+
+### FEDORA 40 GTK4 INSTALL EXAMPLE
+
+
+```bash
+sudo dnf install gtk4-devel
+```
+
+- 3: After installing GTK4 compile with the following Cflags: <code>`pkg-config --cflags --libs gtk4`, -O3, -Oz</code>
+
+### COMPILE EXAMPLE!
+
+```bash
+gcc ./src/main.c ./src/_headers_/_headers_.c ./src/_headers_/_GUI_.c ./src/toml_h/toml.c -o SIMPLE_TXT_EDITOR.o `pkg-config --cflags --libs gtk4` -O3 -Oz
+```
+
+- 4: After compiling you need to create the following directories & files
+
+
+```diff
+- CREATE DIR
++ COMMAND EXAMPLE: mkdir -p $HOME/.config/SimpleTXTEditor/
++ PATH: $HOME/.config/SimpleTXTEditor/
+
+- CREATE FILE
++ COMMAND EXAMPLE: touch $HOME/.config/SimpleTXTEditor/SimpleTXTEditor.toml
++ PATH: $HOME/.config/SimpleTXTEditor/SimpleTXTEditor.toml
+
+- CREATE DIR
++ COMMAND EXAMPLE: mkdir -p $HOME/.config/SimpleTXTEditor/CSS/
++ PATH: $HOME/.config/SimpleTXTEditor/CSS/
+
+- CREATE FILE
++ COMMAND EXAMPLE: touch $HOME/.config/SimpleTXTEditor/CSS/SimpleTXTEditor.css
++ PATH: $HOME/.config/SimpleTXTEditor/CSS/SimpleTXTEditor.css
+```
+
+- 5: After creating the directories & files, you will need to edit the SimpleTXTEditor.toml file
+- 6: Add the following to **$HOME/.config/SimpleTXTEditor/SimpleTXTEditor.toml**
+
+
+```toml
+[CSS]
+# PATH IS USED FOR TESTING & DEVELOPMENT ONLY!
+PATH="./config/CSS/SimpleTXTEditor.css"
+# INSTALL IS THE PATH TO YOUR CSS FILE!
+INSTALL="/home/ !!REPLACE_WITH_USERNAME!! /.config/SimpleTXTEditor/CSS/SimpleTXTEditor.css"
+```
+
+**KEEP IN NOTE THAT YOU CAN CHANGE THE LOOK OF THE PROGRAM WITH THE CSS FILE!**
+
+- 7: After that you can just launch the compiled application..
+- 8: You can create a .desktop file for it aswell!
+
 # Remove
 
 ```bash
-git clone https://github.com/MeKebabMan/SimpleTXTEditor && cd SimpleTXTEditor && \
- make Remove
+git clone https://github.com/mekebabman/simpletxteditor && cd simpletxteditor && \
+ make remove
+```
+
+# Reinstall
+
+```bash
+git clone https://github.com/mekebabman/simpletxteditor && cd simpletxteditor && \
+ make Reinstall
 ```
 
 # Customize
