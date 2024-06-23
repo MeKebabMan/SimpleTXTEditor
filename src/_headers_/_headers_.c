@@ -1,9 +1,13 @@
 #include "../_headers_.h"
-#include "../toml.h"
 #include "gio/gio.h"
 #include "glib-object.h"
+#include "glib.h"
 #include "gtk/gtk.h"
+#include "gtk/gtkshortcut.h"
+#include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 // CREATE GTK APP
 
@@ -22,99 +26,58 @@ int CreateGTKAPP(const char *__appID, int *__FUNC, int argc, char **argv) {
   return status;
 }
 
-
-
-// GET CSS PATH 1
-
-const char *GET_CSS_PATH_1(const char *__TOML_CONFIG) {
-
-  FILE *TOML_PTR = fopen(__TOML_CONFIG, "r");
-  if (TOML_PTR == NULL) {
-    printf("%s", __TOML_CONFIG);
-    return NULL;
-  }
-
-  char ERRBUFF[255];
-  toml_table_t *toml = toml_parse_file(TOML_PTR, ERRBUFF, sizeof(ERRBUFF));
-  if (!toml) {
-    printf("%s", ERRBUFF);
-    return NULL;
-  }
-
-  toml_table_t *CSS_PROP = toml_table_in(toml, "CSS");
-  if (!CSS_PROP) {
-    printf("2");
-    toml_free(CSS_PROP);
-    return NULL;
-  }
-
-  toml_datum_t CSS_PATH = toml_string_in(CSS_PROP, "PATH");
-  if (!CSS_PATH.ok) {
-    printf("3");
-    toml_free(toml);
-    return NULL;
-  }
-
-  toml_free(toml);
-  fclose(TOML_PTR);
-
-  return (const char *)CSS_PATH.u.s;
-}
-
-// GET CSS PATH 2
-
-const char *GET_CSS_PATH_2(const char *__TOML_CONFIG) {
-
-  FILE *TOML_PTR = fopen(__TOML_CONFIG, "r");
-  if (TOML_PTR == NULL) {
-    printf("%s", __TOML_CONFIG);
-    return NULL;
-  }
-
-  char ERRBUFF[255];
-  toml_table_t *toml = toml_parse_file(TOML_PTR, ERRBUFF, sizeof(ERRBUFF));
-  if (!toml) {
-    printf("%s", ERRBUFF);
-    return NULL;
-  }
-
-  toml_table_t *CSS_PROP = toml_table_in(toml, "CSS");
-  if (!CSS_PROP) {
-    printf("2");
-    toml_free(toml);
-    return NULL;
-  }
-
-  toml_datum_t CSS_INSTALL_PATH = toml_string_in(CSS_PROP, "INSTALL");
-  if (!CSS_INSTALL_PATH.ok) {
-    printf("3");
-    toml_free(toml);
-    return NULL;
-  }
-
-  toml_free(toml);
-  fclose(TOML_PTR);
-
-  return (const char *)CSS_INSTALL_PATH.u.s;
-}
-
-// GTK SAVE FILE
-
-void GTK_Savefile(GtkWidget *widget, gpointer user_data) {
-
-}
-
-// GTK OPEN FILE
-
-void GTK_Openfile(GtkWidget *widget, gpointer user_data) {
-
-}
-
-// GTK DESTROY WIDGET
-
-void GTK_DESTROY_WIDGET(GtkWidget *widget, gpointer data) {
-  GtkWidget *WINDOW = GTK_WIDGET(data);
+// void
+H_VAR GTK_DESTROY_WINDOW(GtkWidget *widget, gpointer data) {
+  GtkWidget *_WIDGET = GTK_WIDGET(data);
   if (GTK_IS_WINDOW(GTK_WINDOW(data))) {
-    gtk_window_destroy(GTK_WINDOW(WINDOW));
+    gtk_window_destroy(GTK_WINDOW(_WIDGET));
   }
+}
+
+const char* GET_TOML_CONFIG_PATH() {
+	const char* HOME_ENV = g_get_home_dir();
+
+	const unsigned int buffer_size = 255;
+	char* buffer = (char*)calloc(buffer_size + 1, sizeof(char));
+
+	if (buffer == NULL) {
+		return H_NO;
+	}
+
+	if (TOML_FILE_PATH == H_NO) {
+		free(buffer);
+		return H_NO;
+	}
+
+	// APPEND THE STRINGS!
+	size_t buffer_count = snprintf(buffer, buffer_size - 1, "%s/%s", HOME_ENV, TOML_FILE_PATH);
+
+	// ERROR HANDLING!
+	if (buffer[buffer_count] == '\0') {
+		// ADD 1 INTO THE CHECK FOR THE NULL TERMINATOR
+		if (buffer_count != strlen(HOME_ENV) + strlen(TOML_FILE_PATH) + 1) {
+			free(buffer);
+			return H_NO;
+		}
+	} else {
+		// SKIP ADDING 1 FOR THE NULL TERMINATOR
+		if (buffer_count != strlen(HOME_ENV) + strlen(TOML_FILE_PATH)) {
+			free(buffer);
+			return H_NO;
+		}
+	}
+
+	// DUP THE STRING 
+	const char* static_buffer = strdup(buffer);
+	if (static_buffer == H_NO) {
+		free(buffer);
+		return H_NO;
+	}
+
+	// FREE THE ALLOCATED BUFFER & RETURN THE STATIC BUFFER
+	free(buffer);
+
+	// RETURNING THE STATIC BUFFER
+	return (const char*)static_buffer;
+
 }

@@ -1,8 +1,16 @@
 #include <stdio.h>
 #include <gtk/gtk.h>
 #include "../_headers_.h"
+#include "glib-object.h"
+#include "glib.h"
+#include "glibconfig.h"
+#include "gtk/gtkshortcut.h"
 
-void activate_GTK_APP(GtkApplication *app, gpointer data) {
+// void
+H_VAR activate_GTK_APP(GtkApplication *app, gpointer data) {
+  // UPDATE BUTTON OPTIONS!! 
+  UPDATE_TOML_BUTTON_OPTIONS(GET_TOML_CONFIG_PATH(), &_BUTTON_OPTIONS_);
+
   GtkWidget *window;
   GtkWidget *Win_grid;
   GtkWidget *Second_grid;
@@ -10,12 +18,11 @@ void activate_GTK_APP(GtkApplication *app, gpointer data) {
   GtkWidget *Openfile;
   GtkWidget *Quit;
   GtkWidget *Scroll_win;
-  GtkWidget *text_view;
-  GtkWidget *file_name;
 
   window = gtk_application_window_new(app);
   gtk_window_set_title(GTK_WINDOW(window), "SimpleTextEditor");
   gtk_window_set_default_size(GTK_WINDOW(window), win_w, win_h);
+  g_signal_connect(window, "destroy", G_CALLBACK(GTK_DESTROY_WINDOW), GTK_WINDOW(window));
 
   Win_grid = gtk_grid_new();
   gtk_widget_set_halign(Win_grid, GTK_ALIGN_FILL);
@@ -29,22 +36,24 @@ void activate_GTK_APP(GtkApplication *app, gpointer data) {
   gtk_widget_set_vexpand(Second_grid, FALSE);
   gtk_widget_set_hexpand(Second_grid, TRUE);
 
+
   Savefile = gtk_button_new_with_label("Save file");
   gtk_widget_set_vexpand(Savefile, TRUE);
   gtk_widget_set_hexpand(Savefile, TRUE);
   gtk_widget_set_name(GTK_WIDGET(Savefile), "savefile");
-  g_signal_connect(Savefile, "clicked", G_CALLBACK(GTK_Savefile), text_view);
+  g_signal_connect(Savefile, "clicked", G_CALLBACK(GTK_Savefile), window);
 
   Openfile = gtk_button_new_with_label("Open file");
   gtk_widget_set_vexpand(Openfile, TRUE);
   gtk_widget_set_hexpand(Openfile, TRUE);
   gtk_widget_set_name(GTK_WIDGET(Openfile), "openfile");
-  g_signal_connect(Openfile, "clicked", G_CALLBACK(GTK_Openfile), text_view);
+	
+  g_signal_connect(Openfile, "clicked", G_CALLBACK(GTK_Openfile), window);
 
   Quit = gtk_button_new_with_label("QUIT");
   gtk_widget_set_vexpand(Quit, TRUE);
   gtk_widget_set_hexpand(Quit, TRUE);
-  g_signal_connect(Quit, "clicked", G_CALLBACK(GTK_DESTROY_WIDGET), window);
+  g_signal_connect(Quit, "clicked", G_CALLBACK(GTK_DESTROY_WINDOW), GTK_WINDOW(window));
   gtk_widget_set_name(GTK_WIDGET(Quit), "quit");
 
   Scroll_win = gtk_scrolled_window_new();
@@ -63,22 +72,15 @@ void activate_GTK_APP(GtkApplication *app, gpointer data) {
 
   char css_full_path[255];
 
-  const char *Home_dir = g_get_home_dir();
-
-  char toml_full_path[255];
-
-  snprintf(toml_full_path, sizeof(toml_full_path),
-           "%s/.config/SimpleTXTEditor/SimpleTXTEditor.toml", Home_dir);
-
-  if (access(GET_CSS_PATH_1(toml_full_path), F_OK) == 0) {
+  if (access(GET_CSS_PATH_1(GET_TOML_CONFIG_PATH()), F_OK) == 0) {
     snprintf(css_full_path, sizeof(css_full_path), "%s",
-             GET_CSS_PATH_1(toml_full_path));
+             GET_CSS_PATH_1(GET_TOML_CONFIG_PATH()));
   } else {
-    if (access(GET_CSS_PATH_2(toml_full_path), F_OK) == 0) {
+    if (access(GET_CSS_PATH_2(GET_TOML_CONFIG_PATH()), F_OK) == 0) {
       snprintf(css_full_path, sizeof(css_full_path), "%s",
-               GET_CSS_PATH_2(toml_full_path));
+               GET_CSS_PATH_2(GET_TOML_CONFIG_PATH()));
     } else {
-      g_print("NO CSS FILE PROVIDED!");
+      g_print("FAILED TO GET CSS PATH!\n%s", GET_TOML_CONFIG_PATH());
       gtk_window_destroy(GTK_WINDOW(window));
       return;
     }
@@ -99,9 +101,15 @@ void activate_GTK_APP(GtkApplication *app, gpointer data) {
   gtk_grid_attach(GTK_GRID(Win_grid), file_name, 0, 2, 1, 1);
 
   // CHILDREN APPENDING
-  gtk_grid_attach(GTK_GRID(Second_grid), Savefile, 0, 0, 1, 1);
-  gtk_grid_attach(GTK_GRID(Second_grid), Openfile, 1, 0, 1, 1);
-  gtk_grid_attach(GTK_GRID(Second_grid), Quit, 2, 0, 1, 1);
+  if (_BUTTON_OPTIONS_.use_savefile == H_OK) {
+	  gtk_grid_attach(GTK_GRID(Second_grid), Savefile, 0, 0, 1, 1);
+  }
+  if (_BUTTON_OPTIONS_.use_openfile == H_OK) {
+	  gtk_grid_attach(GTK_GRID(Second_grid), Openfile, 1, 0, 1, 1);
+  }
+  if (_BUTTON_OPTIONS_.use_quit == H_OK) {
+	  gtk_grid_attach(GTK_GRID(Second_grid), Quit, 2, 0, 1, 1);
+  }
   gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(Scroll_win), text_view);
 
   gtk_window_present(GTK_WINDOW(window));

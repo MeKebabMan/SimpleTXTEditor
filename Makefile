@@ -4,6 +4,8 @@ Project_toml_file=./src/toml_h/toml.c
 Project_gtk_cflags=$(shell pkg-config --cflags --libs gtk4)
 Project_cflags=-O3 -Oz -std=c2x -m64
 Project_GUI_file=./src/_headers_/_GUI_.c
+Project_tomlconfig_file=./src/_headers_/_TOMLCONFIG_.c 
+Project_GTKFILEDIALOG_file=./src/_headers_/gtk_file_dialog.c 
 Project_compiler=gcc 
 Project_install_path=/usr/bin/
 Project_desktop_install=$(HOME)/.local/share/applications
@@ -17,8 +19,9 @@ Compile:
 	@mkdir -p ./build/
 	@test -f ./src/main.c && test -f ./src/_headers_/_headers_.c && test -f $(Project_GUI_file) && \
 	 test -f $(Project_toml_file) && \
-	  $(Project_compiler) ./src/*.c ./src/_headers_/_headers_.c $(Project_GUI_file) $(Project_toml_file) -o \
-	   ./build/$(Project_name)_$(Project_version) $(Project_gtk_cflags) $(Project_cflags)
+	  $(Project_compiler) ./src/main.c ./src/_headers_/_headers_.c  $(Project_GUI_file) \
+	   $(Project_toml_file) $(Project_tomlconfig_file) $(Project_GTKFILEDIALOG_file) -o \
+	    ./build/$(Project_name)_$(Project_version) $(Project_gtk_cflags) $(Project_cflags)
 
 Load_Desktop_app:
 	@test -f $(Project_desktop_install)/$(Project_name).desktop && rm $(Project_desktop_install)/$(Project_name).desktop || true

@@ -27,16 +27,25 @@
 
 #quit:hover {
 	background-color: #ff4040;
-	border: 0.1rem solid #ffffff;
+	border-right: 0.1rem solid #ffffff;
+	border-left: 0.1rem solid #ffffff;
 	border-radius: 0.15rem;
 }
 
 #openfile:hover, #savefile:hover {
 	background-color: #23cc21;
-	border: 0.1rem solid #ffffff;
+	border-right: 0.1rem solid #ffffff;
+	border-left: 0.1rem solid #ffffff;
 	border-radius: 0.15rem;
 }
 
 #textbox {
+	border-top: 0.25rem solid #ffffff;
+	font-family: monospace;
+}
+
+#file {
+	border: 0 solid transparent;
+	font-family: fantasy;
 	border-top: 0.25rem solid #ffffff;
 }
